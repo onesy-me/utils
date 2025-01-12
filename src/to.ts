@@ -8,40 +8,8 @@ export type TType = 'string' | 'arraybuffer' | 'datauri' | 'base64' | 'blob' | '
 
 export type TTo = ArrayBuffer | Blob | Buffer | string | number;
 
-// Only for browser, since browser only has Blob
-export const dataUriToBlob = (value: string, arrayBuffer = false): Blob | ArrayBuffer | undefined => {
-  if (isValid('datauri', value) || isValid('base64', value)) {
-    try {
-      // Convert base64 to raw binary data held in a string
-      const byteString = atob(isValid('datauri', value) ? value.split(',')[1] : value);
-
-      // Separate out the mime component
-      const mimeString = isValid('datauri', value) && value.split(',')[0].split(':')[1].split(';')[0];
-
-      // Write the bytes of the string to an ArrayBuffer
-      const ab = new ArrayBuffer(byteString.length * 2);
-
-      // create a view into the buffer
-      const ia = new Uint16Array(ab);
-
-      // Set the bytes of the buffer to the correct values
-      for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-
-      if (arrayBuffer) return ab;
-
-      // Write the ArrayBuffer to a blob, and you're done
-      const blob = new Blob([ab], { type: mimeString });
-
-      return blob;
-    }
-    catch (error) {
-      return;
-    }
-  }
-};
-
 // Only for nodejs, since only nodejs has Buffer
-export const dataUriToBuffer = (value: string): Buffer | undefined => {
+export const dataURIToBuffer = (value: string): Buffer | undefined => {
   if (isValid('datauri', value) || isValid('base64', value)) {
     try {
       // Extract the base64 data from dataUri
@@ -56,12 +24,74 @@ export const dataUriToBuffer = (value: string): Buffer | undefined => {
   }
 };
 
-export const blobToDataURI = blob => new Promise(resolve => {
-  const fileReader = new FileReader();
+// Only for browser, since browser only has Blob
+export const dataURIToBlob = (value: string, outputArrayBuffer = false): Blob | ArrayBuffer | undefined => {
+  // Extract base64 part of the dataURL (remove the prefix)
+  const base64Data = value.split(',')[1];
 
-  fileReader.onload = event => resolve(event.target.result);
+  // Convert base64 string to binary data (Blob)
+  // Decode base64 string
+  const byteCharacters = atob(base64Data);
 
-  fileReader.readAsDataURL(blob);
+  const byteArrays: Uint8Array[] = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+    const slice = byteCharacters.slice(offset, offset + 1024);
+
+    const byteNumbers = new Array(slice.length);
+
+    for (let i = 0; i < slice.length; i++) byteNumbers[i] = slice.charCodeAt(i);
+
+    const byteArray = new Uint8Array(byteNumbers);
+
+    byteArrays.push(byteArray);
+  }
+
+  // array buffer
+  if (outputArrayBuffer) {
+    // Calculate the total length of all Uint8Arrays
+    let totalLength = 0;
+
+    for (let array of byteArrays) totalLength += array.length;
+
+    // Create a new ArrayBuffer to hold all the data
+    const arrayBuffer = new ArrayBuffer(totalLength);
+
+    // Create a view of the ArrayBuffer as a Uint8Array
+    const combinedArray = new Uint8Array(arrayBuffer);
+
+    // Copy the contents of each Uint8Array into the combined ArrayBuffer
+    let offset = 0;
+
+    for (let array of byteArrays) {
+      combinedArray.set(array, offset);
+
+      offset += array.length;
+    }
+
+    return arrayBuffer;
+  }
+
+  // blob
+  // Create Blob from the byte arrays
+  const blob = new Blob(byteArrays, { type: 'image/png' });
+
+  return blob;
+};
+
+export const blobToDataURI = blob => new Promise<string>(resolve => {
+  const reader = new FileReader();
+
+  reader.onloadend = () => {
+    const result = reader.result;
+
+    if (typeof result === 'string') resolve(result);
+    else resolve('');
+  };
+
+  reader.onerror = () => resolve('');
+
+  reader.readAsDataURL(blob);
 });
 
 export const sizeFormat = (value: number, decimals = 2, thousand = 1000): string => {
@@ -92,7 +122,7 @@ const to = (
   value_: any,
   type: TType = 'arraybuffer',
   options_: IOptions = {}
-): TTo => {
+): TTo | Promise<TTo> => {
   const options = { ...optionsDefault, ...options_ };
 
   let value: any = value_;
@@ -119,12 +149,12 @@ const to = (
 
     case 'arraybuffer':
       if (isValid('base64', value)) {
-        if (isEnvironment('browser')) return dataUriToBlob(value, true);
+        if (isEnvironment('browser')) return dataURIToBlob(value, true);
         if (isEnvironment('nodejs')) return to(Buffer.from(value, 'base64'), 'arraybuffer', options);
       }
 
       if (isValid('datauri', value)) {
-        if (isEnvironment('browser')) return dataUriToBlob(value, true);
+        if (isEnvironment('browser')) return dataURIToBlob(value, true);
         if (isEnvironment('nodejs')) return to(value.split(',')[1], 'arraybuffer', options);
       }
 
@@ -165,6 +195,8 @@ const to = (
       return;
 
     case 'datauri':
+      if (is('blob', value)) return blobToDataURI(value);
+
       if (isValid('datauri', value)) return value;
 
       if (is('string', value)) {
@@ -180,9 +212,9 @@ const to = (
 
     case 'blob':
       if (isEnvironment('browser')) {
-        if (isValid('base64', value)) return dataUriToBlob(value);
+        if (isValid('base64', value)) return dataURIToBlob(value);
 
-        if (isValid('datauri', value)) return dataUriToBlob(value);
+        if (isValid('datauri', value)) return dataURIToBlob(value);
 
         if (is('string', value)) return new Blob([value], { type: 'text/plain' });
 
@@ -193,9 +225,9 @@ const to = (
 
     case 'buffer':
       if (isEnvironment('nodejs')) {
-        if (isValid('base64', value)) return dataUriToBuffer(value);
+        if (isValid('base64', value)) return dataURIToBuffer(value);
 
-        if (isValid('datauri', value)) return dataUriToBuffer(value);
+        if (isValid('datauri', value)) return dataURIToBuffer(value);
 
         if (is('string', value)) return Buffer.from(value, 'utf-8');
 

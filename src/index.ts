@@ -248,3 +248,5 @@ export { default as insertTextAtSelection } from './insertTextAtSelection';
 export { default as clearSelection } from './clearSelection';
 
 export { default as stringToColor } from './stringToColor';
+
+export { default as throttle } from './throttle';
