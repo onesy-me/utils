@@ -66,7 +66,7 @@ export default function isValid(
       return is('string', value) && [...value].every(item => value_.indexOf(item) > -1);
 
     case 'url':
-      pattern = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
+      pattern = /^(https?:\/\/)?([\w.-]+)(\.[\w.-]+)+(\/[\w\-.~:\/?#[\]@!$&'()*+,;=%]*)?$/;
 
       return pattern.test(value);
 
