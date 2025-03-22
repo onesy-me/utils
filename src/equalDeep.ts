@@ -15,6 +15,7 @@ const equalDeep = (
 
   if (
     Array.isArray(valueA) &&
+    Array.isArray(valueB) &&
     valueA.length === valueB.length
   ) return valueA.every((item: any, index: number) => equalDeep(item, valueB[index]));
 
