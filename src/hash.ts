@@ -9,7 +9,7 @@ export interface IOptions {
 
 const optionsDefault: IOptions = {
   serialize: true,
-  withPrefix: true,
+  withPrefix: true
 };
 
 const hash = (
