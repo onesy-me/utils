@@ -6,6 +6,6 @@ const innerHTMLToText = (value: string) => Try(() => {
   if (!unsafe.some(item => value.includes(item))) return value;
 
   return encodeURIComponent(value);
-});
+}) ?? value;
 
 export default innerHTMLToText;
