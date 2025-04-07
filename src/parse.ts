@@ -30,10 +30,10 @@ const parse = (
 
           const env = getEnvironment();
 
-          if (env.AMAUI?.env === 'test') {
-            if (!env.AMAUI?.test?.parse?.logs) setObjectValue(env, 'AMAUI.test.parse.logs', []);
+          if (env.ONESY?.env === 'test') {
+            if (!env.ONESY?.test?.parse?.logs) setObjectValue(env, 'ONESY.test.parse.logs', []);
 
-            env.AMAUI.test.parse.logs.push(error);
+            env.ONESY.test.parse.logs.push(error);
           }
         }
       }
