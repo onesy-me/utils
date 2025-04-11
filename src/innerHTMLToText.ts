@@ -1,11 +1,14 @@
 import Try from './try';
+import textToInnerHTML from './textToInnerHTML';
 
 const innerHTMLToText = (value: string) => Try(() => {
-  const unsafe = [' ', '"', '<', '>', '{', '}', '|', '\\', '^', '`', '\n', '\r', '\t'];
+  if (!value) return '';
 
-  if (!unsafe.some(item => value.includes(item))) return value;
+  // Step 1: Decode the string first
+  const decoded = textToInnerHTML(value);
 
-  return encodeURIComponent(value);
+  // Step 3: Escape JSON-breaking characters
+  return JSON.stringify(decoded).slice(1, -1);
 }) ?? value;
 
 export default innerHTMLToText;
