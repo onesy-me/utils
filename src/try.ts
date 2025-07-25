@@ -8,10 +8,10 @@ export interface IOptions {
 
 const optionsDefault: IOptions = {};
 
-const Try = (
+const Try = <Type extends unknown = undefined>(
   value: () => any,
   options_: IOptions = {}
-): any => {
+): Type => {
   const options = { ...optionsDefault, ...options_ };
 
   try {
