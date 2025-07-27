@@ -140,7 +140,7 @@ group('@onesy/utils/parse', () => {
   group('options', () => {
 
     to('log', async () => {
-      global.AMAUI = {
+      global.ONESY = {
         env: 'test',
       };
 
@@ -153,7 +153,7 @@ group('@onesy/utils/parse', () => {
       values_.map(value => OnesyUtils.parse(value, 'JSON', { log: false }));
 
       const valueBrowsers = await evaluate((window: any) => {
-        window.AMAUI = {
+        window.ONESY = {
           env: 'test',
         };
 
@@ -166,11 +166,11 @@ group('@onesy/utils/parse', () => {
         values_.map(value => window.OnesyUtils.parse(value, 'JSON', { log: false }));
 
         return [
-          window.AMAUI.test.parse.logs.length,
+          window.ONESY.test.parse.logs.length,
         ];
       });
       const valueNode = [
-        global.AMAUI.test.parse.logs.length,
+        global.ONESY.test.parse.logs.length,
       ];
       const values = [valueNode, ...valueBrowsers];
 

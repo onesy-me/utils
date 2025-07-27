@@ -35,7 +35,7 @@ group('@onesy/utils/checkAppVersion', () => {
 
     to(`Meta found and version is previous`, async () => {
       const valueBrowsers = await evaluate(async (window: any) => {
-        window.AMAUI = {
+        window.ONESY = {
           env: 'test',
           app: { version: '4.0.0' },
           test: {
@@ -69,7 +69,7 @@ group('@onesy/utils/checkAppVersion', () => {
 
     to(`Meta found and version is new`, async () => {
       const valueBrowsers = await evaluate(async (window: any) => {
-        window.AMAUI = {
+        window.ONESY = {
           env: 'test',
           app: { version: '4.0.1' },
           test: {

@@ -35,7 +35,7 @@ group('@onesy/utils/try', () => {
   group('options', () => {
 
     to('log', async () => {
-      global.AMAUI = {
+      global.ONESY = {
         env: 'test',
       };
 
@@ -43,7 +43,7 @@ group('@onesy/utils/try', () => {
       OnesyUtils.Try(() => { throw new Error(); }, { log: false });
 
       const valueBrowsers = await evaluate((window: any) => {
-        window.AMAUI = {
+        window.ONESY = {
           env: 'test',
         };
 
@@ -51,11 +51,11 @@ group('@onesy/utils/try', () => {
         window.OnesyUtils.Try(() => { throw new Error(); }, { log: false });
 
         return [
-          window.AMAUI.test.Try.logs.length,
+          window.ONESY.test.Try.logs.length,
         ];
       });
       const valueNode = [
-        global.AMAUI.test.Try.logs.length,
+        global.ONESY.test.Try.logs.length,
       ];
       const values = [valueNode, ...valueBrowsers];
 

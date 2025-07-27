@@ -41,7 +41,7 @@ group('@onesy/utils/polyfills', () => {
 
       to('ArrayBuffer', async () => {
         const valueBrowsers = await evaluate((window: any) => {
-          window.AMAUI = { env: 'test' };
+          window.ONESY = { env: 'test' };
 
           window.OnesyUtils.polyfills();
 

@@ -23,10 +23,10 @@ const Try = <Type extends unknown = undefined>(
 
       const env = getEnvironment();
 
-      if (env.AMAUI?.env === 'test') {
-        if (!env.AMAUI?.test?.Try?.logs) setObjectValue(env, 'AMAUI.test.Try.logs', []);
+      if (env.ONESY?.env === 'test') {
+        if (!env.ONESY?.test?.Try?.logs) setObjectValue(env, 'ONESY.test.Try.logs', []);
 
-        env.AMAUI.test.Try.logs.push(error);
+        env.ONESY.test.Try.logs.push(error);
       }
     }
   }

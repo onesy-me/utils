@@ -501,11 +501,11 @@ function arrayBufferFunction() {
 }
 
 export const arrayBufferPolyfill = () => {
-  const AMAUI_TEST = (window as any).AMAUI?.env === 'test';
+  const ONESY_TEST = (window as any).ONESY?.env === 'test';
 
-  if ('File' in window) (File.prototype as any).arrayBuffer = AMAUI_TEST ? arrayBufferFunction || (File.prototype as any).arrayBuffer : (File.prototype as any).arrayBuffer || arrayBufferFunction;
+  if ('File' in window) (File.prototype as any).arrayBuffer = ONESY_TEST ? arrayBufferFunction || (File.prototype as any).arrayBuffer : (File.prototype as any).arrayBuffer || arrayBufferFunction;
 
-  if ('Blob' in window) (Blob.prototype as any).arrayBuffer = AMAUI_TEST ? arrayBufferFunction || (Blob.prototype as any).arrayBuffer : (Blob.prototype as any).arrayBuffer || arrayBufferFunction;
+  if ('Blob' in window) (Blob.prototype as any).arrayBuffer = ONESY_TEST ? arrayBufferFunction || (Blob.prototype as any).arrayBuffer : (Blob.prototype as any).arrayBuffer || arrayBufferFunction;
 };
 
 export const browserPolyfills = (additions = true) => {
