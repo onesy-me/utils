@@ -32,15 +32,13 @@ export const getUserIPandLocation = async (): Promise<IUserIPandLocation> => {
 
   // cloudflare
   try {
-    let data: any = await fetch(`https://www.cloudflare.com/cdn-cgi/trace`);
+    const data: any = await fetch(`https://www.cloudflare.com/cdn-cgi/trace`);
 
-    data = await data.text();
+    const items = ((await data.text()) || '').split('\n');
 
-    const items = data.split('\n');
+    ip_address = items.find((item: string | string[]) => item.indexOf('ip') === 0)?.slice(3) || '';
 
-    ip_address = items.find((item: string | string[]) => item.indexOf('ip') === 0).slice(3);
-
-    country_code = items.find((item: string | string[]) => item.indexOf('loc') === 0).slice(4);
+    country_code = items.find((item: string | string[]) => item.indexOf('loc') === 0)?.slice(4) || '';
   }
   catch (error) {
     console.log(error);
@@ -51,7 +49,7 @@ export const getUserIPandLocation = async (): Promise<IUserIPandLocation> => {
     try {
       const dataAWS = await fetch('https://checkip.amazonaws.com');
 
-      ip_address = (await dataAWS.text()).split('\n')[0];
+      ip_address = ((await dataAWS.text()) || '').split('\n')?.[0] || '';
     }
     catch (error) {
       console.log(error);
@@ -60,7 +58,7 @@ export const getUserIPandLocation = async (): Promise<IUserIPandLocation> => {
 
   return {
     ip_address,
-    country_code,
+    country_code
   };
 };
 
