@@ -3,7 +3,7 @@
   "version": "1.0.17",
   "description": "Utils",
   "repository": "https://github.com/onesy-me/utils.git",
-  "author": "Lazar <lazareric2@gmail.com>",
+  "author": "Lazar Erić <lazareric1@proton.me>",
   "license": "MIT",
   "private": false,
   "main": "./src/index.ts",
