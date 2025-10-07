@@ -1,7 +1,11 @@
 import is from './is';
 
-const capitalize = (value: string): string => {
-  if (is('string', value)) return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
+const capitalize = (value: string, words = false): string => {
+  if (is('string', value)) {
+    if (words) value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+
+    return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
+  }
 
   return value;
 };

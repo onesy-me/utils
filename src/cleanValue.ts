@@ -9,6 +9,7 @@ export interface IOptions {
   replaceWith?: string;
   trim?: boolean;
   capitalize?: boolean;
+  capitalizeWords?: boolean;
   lowercase?: boolean;
 }
 
@@ -61,6 +62,7 @@ const cleanValue = (
 
       if (options.trim) value = value.trim();
       if (options.capitalize) value = capitalize(value);
+      if (options.capitalizeWords) value = capitalize(value, true);
       if (options.lowercase) value = value.toLocaleLowerCase();
 
       return value;
