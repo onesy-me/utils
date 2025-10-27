@@ -33,7 +33,7 @@ const setObjectValue = <T extends unknown>(
     if (keys.length === 1) {
       if (
         (is('array', object) && is('number', key)) ||
-        is('object', object)
+        (is('object', object) || is('object-like', object) || is('class', object) || is('function', object))
       ) {
         // Add array or object as a value of the key, if that key doesn't exist atm
         if (
@@ -47,7 +47,7 @@ const setObjectValue = <T extends unknown>(
     else {
       if (
         (is('array', object) && is('number', key)) ||
-        is('object', object)
+        (is('object', object) || is('object-like', object) || is('class', object) || is('function', object))
       ) {
         // Add array or object as a value of the key, if that key doesn't exist atm
         if (
@@ -61,7 +61,7 @@ const setObjectValue = <T extends unknown>(
       // If we are trying to set a deeply nested value on a
       // simple value type, meaning if it's not an array or an object,
       // To override existing value use valueOverride: true option
-      if (!(is('object', value_) || is('array', value_))) return object;
+      if (!(is('object', value_) || is('object-like', value_) || is('class', value_) || is('function', value_) || is('array', value_))) return object;
 
       return setObjectValue(object[key], keys.slice(1), value, options);
     }
